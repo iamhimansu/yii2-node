@@ -1,9 +1,14 @@
 const webConfigs = require('./app/config/web');
 const Application = require('./core/application/WebApplication');
+const configs = require("./app/config/web");
 
+configs.basePath = configs.basePath || __dirname;
 
-const app = new Application(webConfigs);
+/**
+ * Make it globally
+ */
+global.App = Application.getInstance(webConfigs);
 
-app.router.handle();
+App.router.handle();
 
-app.run();
+App.run();

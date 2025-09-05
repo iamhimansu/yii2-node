@@ -1,5 +1,7 @@
-import BaseModule from "./BaseModule";
+const BaseModule = require("./BaseModule");
 
 class Module extends BaseModule {
 
 }
+
+module.exports = Module;

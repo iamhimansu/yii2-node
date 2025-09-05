@@ -6,6 +6,7 @@ class BaseApplication {
         this.controllerId = null;
         this.moduleId = null;
         this.actionId = null;
+        this.basePath = null;
     }
 }
 

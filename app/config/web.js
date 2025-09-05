@@ -1,13 +1,12 @@
 const configs = {
     port: 3000,
+    debug: false,
     modules: {
-        examination: {
-            class: "app/modules/examination/Module",
+        klop: {
+            class: "/modules/klop/Module",
         }
     },
-    routes: {
-
-    }
+    routes: {}
 };
 
 module.exports = configs;

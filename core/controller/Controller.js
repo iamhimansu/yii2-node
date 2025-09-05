@@ -1,5 +1,7 @@
-import BaseController from "./BaseController";
+const BaseController = require("./BaseController");
 
 class Controller extends BaseController {
 
 }
+
+module.exports = Controller;

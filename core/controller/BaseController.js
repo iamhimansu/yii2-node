@@ -1,7 +1,11 @@
-class BaseController {
+const BaseObject = require("../object/BaseObject");
+
+class BaseController extends BaseObject {
     constructor(app) {
+        super(app);
         this.application = app;
-        this.defaultAction = null;
+        this.defaultAction = 'index';
     }
 }
-export default BaseController;
+
+module.exports = BaseController;

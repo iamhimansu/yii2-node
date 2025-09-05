@@ -1,24 +1,22 @@
-const {route} = require("express/lib/application");
-
 class RouteParser {
     constructor(router, path) {
         this.path = path;
-        this.module = null;
-        this.controller = null;
-        this.action = null;
+        this.moduleId = null;
+        this.controllerId = null;
+        this.actionId = null;
         this.#parse();
     }
 
-    getModule() {
-        return this.module;
+    getModuleId() {
+        return this.moduleId;
     }
 
-    getController() {
-        return this.controller;
+    getControllerId() {
+        return this.controllerId;
     }
 
-    getAction() {
-        return this.action;
+    getActionId() {
+        return this.actionId;
     }
 
     #parse() {
@@ -28,20 +26,27 @@ class RouteParser {
 
         switch (split.length) {
             case 1:
-                this.module = split[0];
+                this.moduleId = split[0];
                 break;
             case 2 :
-                this.module = split[0];
-                this.controller = split[1];
+                this.moduleId = split[0];
+                this.controllerId = split[1];
                 break;
             case 3 :
-                this.module = split[0];
-                this.controller = split[1];
-                this.action = split[2];
+                this.moduleId = split[0];
+                this.controllerId = split[1];
+                this.actionId = split[2];
                 break;
             default:
                 break;
         }
+    }
+
+    capitalize(text){
+        return [
+            text.charAt(0).toUpperCase(),
+            text.slice(1)
+        ].join('');
     }
 }
 
