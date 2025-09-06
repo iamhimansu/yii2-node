@@ -5,6 +5,7 @@ class BaseModule extends BaseObject {
         super(app);
         this.application = app;
         this.controllerPath = null;
+        this.viewPath = null;
         this.defaultRoute = null;
     }
 }

@@ -1,14 +1,20 @@
-const webConfigs = require('./app/config/web');
-const Application = require('./core/application/WebApplication');
-const configs = require("./app/config/web");
-
-configs.basePath = configs.basePath || __dirname;
+const webConfigs = require("./app/config/web");
+const CoreApplication = require("./core/application/WebApplication");
+const CoreController = require("./core/controller/Controller");
+const CoreModule = require("./core/module/Module");
+const CoreObject = require("./core/object/Object");
+webConfigs.basePath = webConfigs.basePath || __dirname;
 
 /**
  * Make it globally
  */
-global.App = Application.getInstance(webConfigs);
+globalThis.Yii = {
+    App: CoreApplication.getInstance(webConfigs),
+    Controller: CoreController,
+    Module: CoreModule,
+    Object: CoreObject,
+};
 
-App.router.handle();
+Yii.App.router.handle();
 
-App.run();
+Yii.App.run();

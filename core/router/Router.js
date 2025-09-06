@@ -1,6 +1,7 @@
 const RouteParser = require("./routeParser");
 const path = require("path");
 const RouteResolver = require("../router/RouteResolver");
+const Response = require("../response/BaseResponse");
 
 class Router {
     constructor(application) {
@@ -10,44 +11,50 @@ class Router {
 
     handle() {
         const router = this.router;
-        const configs = this.application.configs;
+
+        router.use('/bootstrap', this.application.coreExpress.static(path.join(Yii.App.basePath, 'node_modules/bootstrap/dist')));
+        router.use('/icons', this.application.coreExpress.static(path.join(Yii.App.basePath, 'node_modules/bootstrap-icons/font')));
 
         router.use(async (req, res, next) => {
-            this.request = req;
-            this.response = res;
 
-            const routeParser = new RouteParser(this, req.url);
-            const moduleId = await routeParser.getModuleId();
+            try {
+                /**
+                 * Set request and response in App
+                 */
+                Yii.App.request = req;
+                Yii.App.response = res;
 
-            /**
-             * If no module is found
-             */
-            if (!moduleId) {
-                router.use('/bootstrap', this.application.coreExpress.static(path.join(__dirname, 'node_modules/bootstrap/dist')));
-                router.use('/icons', this.application.coreExpress.static(path.join(__dirname, 'node_modules/bootstrap-icons/font')));
-                const fallbackPage = path.join(App.basePath, "web/site/index.html");
-                return res.sendFile(fallbackPage, (err) => {
-                    if (err) {
-                        throw err;
-                    }
-                });
+                /**
+                 *
+                 * @type {RouteParser}
+                 */
+                const routeParser = new RouteParser(this, req.url);
+                const moduleId = routeParser.getModuleId();
+
+                /**
+                 * If no module is found
+                 */
+
+                if (!moduleId) {
+                    const fallbackPage = path.join(Yii.App.basePath, "web/site/index.html");
+                    return res.sendFile(fallbackPage, (err) => {
+                        if (err) {
+                            next(err);
+                        }
+                    });
+                }
+
+                const routeResolver = new RouteResolver(routeParser);
+
+                const content = await routeResolver.init();
+
+                await Response.dispatch(content);
+
+                next();
+
+            } catch (e) {
+                next(e);
             }
-
-            /**
-             * If only module is found
-             */
-
-            const M_C_A = new RouteResolver(
-                this.application,
-                routeParser
-            );
-            await M_C_A.init();
-
-            return;
-            if (!controller && !action) {
-                return res.status(404).send(moduleId);
-            }
-            next();
         })
 
         /**
@@ -59,7 +66,7 @@ class Router {
          * Global error handler
          */
         this.application.express.use((err, req, res, next) => {
-            const configs = this.application.configs;
+            const configs = Yii.App.configs;
 
             if (configs.debug) {
                 throw err;
