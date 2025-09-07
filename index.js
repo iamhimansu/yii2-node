@@ -15,6 +15,7 @@ globalThis.Yii = {
     Object: CoreObject,
 };
 
+//Fix handle
 Yii.App.router.handle();
 
 Yii.App.run();
