@@ -24,12 +24,12 @@ class Router {
                  */
                 Yii.App.request = req;
                 Yii.App.response = res;
-
+                
                 /**
                  *
                  * @type {RouteParser}
                  */
-                const routeParser = new RouteParser(this, req.url);
+                const routeParser = new RouteParser(this, req.path);
                 const moduleId = routeParser.getModuleId();
 
                 /**

@@ -137,7 +137,26 @@ class RouteResolver {
             throw new ActionNotFound(actionId);
         }
 
-        return Controller[actionMethod]();
+        const proxy = this.createRequestProxy(Yii.App.request);
+
+        return Controller[actionMethod](proxy);
+    }
+
+    createRequestProxy(req) {
+
+        return new Proxy(function(req){}, {
+            get(_, prop) {
+                // allow symbols (for console.log, coercion, etc.)
+                if (typeof prop === "symbol") return undefined;
+
+                // safely check request parts
+                if (req.params && prop in req.params) return req.params[prop];
+                if (req.query && prop in req.query) return req.query[prop];
+                if (req.body && prop in req.body) return req.body[prop];
+
+                return undefined;
+            }
+        });
     }
 }
 
