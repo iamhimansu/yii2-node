@@ -54,7 +54,7 @@ class RouteResolver {
             }
 
         } catch (error) {
-            throw error;
+            throw new NonInstantiableClass(Yii.App.moduleId);
         }
 
 
