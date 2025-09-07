@@ -5,7 +5,7 @@ class ErrorHandler {
 
     constructor(err, req, res, next) {
         console.log('here');
-        
+
         this.errorHandler(err, req, res, next);
     }
 
@@ -43,15 +43,21 @@ class ErrorHandler {
             })
             .join("");
 
-        const html = template
-            .replace("{{errorName}}", err.name)
-            .replace("{{errorMessage}}", err.message)
-            .replace("{{stackLines}}", stackLines);
+        const html = this.renderTemplate(template, {
+            errorName: err.name,
+            errorMessage: err.message,
+            stackLines
+        });
 
         res.status(500).send(html);
 
         next();
     }
+
+    renderTemplate(template, data) {
+        return template.replace(/{{(.*?)}}/g, (_, key) => data[key.trim()] || '');
+    }
+
 }
 
 module.exports = ErrorHandler;
