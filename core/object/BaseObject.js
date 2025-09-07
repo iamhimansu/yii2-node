@@ -5,7 +5,7 @@ class BaseObject {
     }
 
     init() {
-
+        console.log('Inside base object');
     }
 
     /**

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Error - Yii2-Node</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f9f9f9;
+        }
+
+        .call-stack {
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 30px;
+            color: #e57373;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            min-width: 860px;
+            margin: 0 auto;
+            background: #f3f3f3;
+            padding: 40px 50px 30px 50px;
+            border-bottom: #ccc 1px solid;
+        }
+
+        .header h1 span,
+        .header h1 a {
+            color: #e51717;
+        }
+
+        .header h2 {
+            font-size: 20px;
+            line-height: 1.25;
+        }
+
+        .stack {
+            background: #fff;
+            border-top: 1px solid #ddd;
+        }
+
+        .stack-line {
+            font-family: monospace;
+            white-space: pre;
+            background-color: #fafafa;
+            margin: 15px 0;
+        }
+
+        .stack-message {
+            padding: 15px;
+        }
+
+        .stack-line:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .file-snippet {
+            background: #ffffff;
+            color: #222222;
+            margin: 15px 0;
+            padding: 0px;
+        }
+
+        .line {
+            white-space: pre;
+            padding: 0 25px;
+        }
+
+        .line-number {
+            width: 25px;
+            text-align: right;
+            color: #aaa;
+            line-height: 20px;
+            font-size: 12px;
+            margin-top: 1px;
+            font-family: Consolas, monospace;
+        }
+
+        .line.error {
+            background-color: #ffebeb;
+            width: 100%;
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1><span>Error: </span><a>{{errorName}}</a></h1>
+        <h2>{{errorMessage}}</h2>
+    </div>
+    <div class="stack">
+        {{stackLines}}
+    </div>
+</body>
+
+</html>

@@ -4,7 +4,7 @@ declare global {
         const App: typeof import("./core/application/WebApplication").default;
 
         /** Base Controller class */
-        const Controller: typeof import("./core/controller/Controller").default;
+        const Controller: typeof import("./core/controller/BaseController").default;
 
         /** Base Module class */
         const Module: typeof import("./core/module/Module").default;

@@ -1,6 +1,10 @@
-class BaseApplication {
+const BaseObject = require("../object/BaseObject");
+
+class BaseApplication extends BaseObject {
     /** @type {object} */
     configs;
+
+    express;
 
     /** Core Express app — always present, but null until initialized */
     /** @type {import("express").Express|null} */
@@ -20,7 +24,7 @@ class BaseApplication {
     /** @type {string|undefined} */
     actionId;
 
-    /** @type {import("../module/BaseModule").default|undefined} */
+    /** @type {import("../module/BaseModule")|undefined} */
     module;
 
 
@@ -36,6 +40,7 @@ class BaseApplication {
     response;
 
     constructor(configs) {
+        super(configs);
         this.configs = configs;
     }
 }

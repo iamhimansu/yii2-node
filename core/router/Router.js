@@ -1,7 +1,8 @@
-const RouteParser = require("./routeParser");
+const RouteParser = require("./RouteParser");
 const path = require("path");
 const RouteResolver = require("../router/RouteResolver");
 const Response = require("../response/BaseResponse");
+const ErrorHandler = require("../error/ErrorHandler");
 
 class Router {
     constructor(application) {
@@ -62,18 +63,26 @@ class Router {
          */
         this.application.express.use(router);
 
+        // /**
+        //  * Global error handler
+        //  */
+        // this.application.express.use((err, req, res, next) => {
+        //     const configs = Yii.App.configs;
+
+        //     if (configs.debug) {
+        //         throw err;
+        //     }
+
+        //     return res.status(500).send(err.toString());
+
+        // });
+
         /**
          * Global error handler
          */
-        this.application.express.use((err, req, res, next) => {
-            const configs = Yii.App.configs;
-
-            if (configs.debug) {
-                throw err;
-            }
-
-            return res.status(500).send(err.toString());
-
+        this.application.express.use((err, req, res, next) => { 
+            new ErrorHandler(err, req, res, next);
+        
         });
     }
 }

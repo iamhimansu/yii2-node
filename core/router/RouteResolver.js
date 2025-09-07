@@ -3,6 +3,8 @@ const ModuleNotFound = require("../exceptions/ModuleNotFound");
 const ModulePathNotFound = require("../exceptions/ModulePathNotFound");
 const RouteNotFound = require("../exceptions/RouteNotFound");
 const ActionNotFound = require("../exceptions/ActionNotFound");
+const ControllerPathNotFound = require("../exceptions/ControllerPathNotFound");
+const NonInstantiableClass = require("../exceptions/NotInstantiableClass");
 
 class RouteResolver {
     constructor(routeParser) {
@@ -33,20 +35,28 @@ class RouteResolver {
             throw new ModulePathNotFound(moduleId);
         }
 
-        //Get module class
-        const moduleClass = require(path.join(ROOT, configs.modules[moduleId].class));
+        let Module;
 
-        const Module = new moduleClass(application);
+        try {
+            //Get module class
+            const moduleClass = require(path.join(ROOT, configs.modules[moduleId].class));
 
-        Yii.App.module = Module;
+            Module = new moduleClass(application);
 
-        //Set module controller path if it is null
-        if (!Module.controllerPath) {
-            Module.controllerPath = path.join(
-                path.dirname(configs.modules[moduleId].class),
-                "controllers"
-            );
+            Yii.App.module = Module;
+
+            //Set module controller path if it is null
+            if (!Module.controllerPath) {
+                Module.controllerPath = path.join(
+                    path.dirname(configs.modules[moduleId].class),
+                    "controllers"
+                );
+            }
+
+        } catch (error) {
+            throw error;
         }
+
 
         let controllerId = this.routeParser.getControllerId();
 
@@ -63,25 +73,31 @@ class RouteResolver {
         //Set controller id
         Yii.App.controllerId = controllerId;
 
-        //Get controller class
-        const controllerClass = require(
-            path.join(
-                ROOT,
-                Module.controllerPath,
-                [
-                    this.routeParser.capitalize(controllerId),
-                    'Controller',
-                    '.js'
-                ].join('')
-            )
-        );
+        let Controller;
 
-        /**
-         * Ensure inheritance of Controller from BaseController
-         * @type {Controller}
-         */
-        const Controller = new controllerClass(application);
+        try {
+            //Get controller class
+            const controllerClass = require(
+                path.join(
+                    ROOT,
+                    Module.controllerPath,
+                    [
+                        this.routeParser.capitalize(controllerId),
+                        'Controller',
+                        '.js'
+                    ].join('')
+                )
+            );
 
+            /**
+             * Ensure inheritance of Controller from BaseController
+             * @type {Controller}
+             */
+            Controller = new controllerClass(application);
+
+        } catch (error) {
+            throw new NonInstantiableClass(Yii.App.controllerId);
+        }
 
         Controller.request = Yii.App.request;
         Controller.response = Yii.App.response;
@@ -118,7 +134,7 @@ class RouteResolver {
          * Check if action is defined
          */
         if (typeof Controller[actionMethod] !== 'function') {
-            throw new ActionNotFound(actionMethod);
+            throw new ActionNotFound(actionId);
         }
 
         return Controller[actionMethod]();
