@@ -1,6 +1,5 @@
 class DashboardController extends Yii.Controller {
-    actionIndex({user}) {
-        
+    actionIndex( {user = "polk"}  ) {
         return this.render('index', {
             message: `Hello, ${user}!`,
             title: 'Dashboard',
